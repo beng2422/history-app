@@ -19,9 +19,22 @@ interface Story {
 }
 
 export default async function PersonalStoriesPage() {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <p className="text-muted-foreground">
+          Configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in
+          .env to view stories.
+        </p>
+      </div>
+    )
+  }
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
-  
+
   // First, get the stories
   const { data: stories, error } = await supabase
     .from('personal_stories')

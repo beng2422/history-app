@@ -10,10 +10,20 @@ export interface HistoricalEvent {
   sortKey?: number
 }
 
-export async function getHistoricalEvents(page = 1, limit = 10) {
+export async function getHistoricalEvents(page = 1, limit = 10): Promise<{
+  events: HistoricalEvent[]
+  totalCount: number
+  envMissing?: boolean
+}> {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return { events: [], totalCount: 0, envMissing: true }
+  }
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
-  
+
   const from = (page - 1) * limit
   const to = from + limit - 1
 

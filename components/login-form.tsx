@@ -90,7 +90,17 @@ export function LoginForm({
             />
           </div>
           <div className="flex flex-col gap-y-1">
-            <Label>Password</Label>
+            <div className="flex items-center justify-between">
+              <Label>Password</Label>
+              {action === 'sign-in' && (
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-medium text-stone-600 hover:underline dark:text-stone-400"
+                >
+                  Forgot password?
+                </Link>
+              )}
+            </div>
             <Input
               name="password"
               type="password"

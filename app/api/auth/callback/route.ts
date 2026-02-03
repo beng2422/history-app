@@ -18,6 +18,8 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code)
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(requestUrl.origin)
+  // Redirect to ?next= path (e.g. /reset-password after password recovery) or home
+  const next = requestUrl.searchParams.get('next')
+  const redirectUrl = next ? new URL(next, requestUrl.origin) : requestUrl.origin
+  return NextResponse.redirect(redirectUrl.toString())
 }

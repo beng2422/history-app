@@ -4,9 +4,15 @@ import { cookies } from 'next/headers'
 import { EventDetails } from '@/components/event-details'
 
 export default async function EventPage({ params }: { params: { eventId: string } }) {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    notFound()
+  }
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
-  
+
   const { data: event } = await supabase
     .from('historical_events')
     .select('*')

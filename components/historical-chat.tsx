@@ -16,6 +16,7 @@ interface ChatMessage {
 export function HistoricalChat({ figure }: { figure: HistoricalFigure }) {
   const [isOpen, setIsOpen] = useState(false)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     initialMessages: [
       {
@@ -42,6 +43,10 @@ export function HistoricalChat({ figure }: { figure: HistoricalFigure }) {
     }
   }, [isOpen])
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
   if (!isOpen) {
     return (
       <Button 
@@ -55,9 +60,9 @@ export function HistoricalChat({ figure }: { figure: HistoricalFigure }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-      <div 
+      <div
         ref={dialogRef}
-        className="fixed inset-x-4 top-4 bottom-4 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:max-w-2xl rounded-lg bg-background shadow-lg flex flex-col"
+        className="fixed left-4 right-4 top-1/2 -translate-y-1/2 z-10 flex h-[46vh] w-[calc(100%-2rem)] flex-col rounded-lg border bg-background shadow-lg md:left-1/2 md:right-auto md:w-full md:max-w-2xl md:-translate-x-1/2"
       >
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-4">
@@ -78,15 +83,18 @@ export function HistoricalChat({ figure }: { figure: HistoricalFigure }) {
 
         <div className="flex-1 overflow-auto p-4 space-y-4">
           {messages.length > 1 ? (
-            messages.slice(1).map((message: ChatMessage) => (
-              <div key={message.id} className="flex gap-3">
-                <div className={message.role === 'user' ? 'ml-auto' : ''}>
-                  <p className="bg-muted rounded-lg p-3">
-                    {message.content}
-                  </p>
+            <>
+              {messages.slice(1).map((message: ChatMessage) => (
+                <div key={message.id} className="flex gap-3">
+                  <div className={message.role === 'user' ? 'ml-auto' : ''}>
+                    <p className="bg-muted rounded-lg p-3">
+                      {message.content}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+              <div ref={messagesEndRef} />
+            </>
           ) : (
             <div className="space-y-4">
               <p className="text-muted-foreground">
@@ -113,14 +121,14 @@ export function HistoricalChat({ figure }: { figure: HistoricalFigure }) {
 
         <div className="mt-auto border-t p-4">
           <form onSubmit={handleSubmit}>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <Input
                 value={input}
                 onChange={handleInputChange}
                 placeholder={`Ask ${figure.name} a question...`}
-                className="flex-1 text-lg py-6 min-h-[60px]"
+                className="max-w-md flex-1 py-3 min-h-[44px] text-base"
               />
-              <Button type="submit" size="lg" className="px-8">
+              <Button type="submit" size="default" className="shrink-0 px-6">
                 Send
               </Button>
             </div>

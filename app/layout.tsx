@@ -18,10 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn('min-h-screen font-sans antialiased', inter.className)}>
-        <Providers attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex min-h-screen flex-col">
+<Providers attribute="class" defaultTheme="light" enableSystem>
+            <div className="flex min-h-screen flex-col bg-background">
             <Header />
-            <main className="flex flex-1 flex-col bg-muted/50">{children}</main>
+            <main className="flex flex-1 flex-col bg-background">{children}</main>
           </div>
           <TailwindIndicator />
         </Providers>
